@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/sunggun-yu/dnsq/compare/v1.0.2...v1.0.3) (2024-07-10)
+
+
+### Bug Fixes
+
+* adding port flag for server ([358ad48](https://github.com/sunggun-yu/dnsq/commit/358ad489614a20954601c04cd6c16447caa067c8))
+* remove namespace from manifest ([61d28cc](https://github.com/sunggun-yu/dnsq/commit/61d28cca3acf85f906871d7ef46a9c5b5ff7f818))
+
 ## [1.0.2](https://github.com/sunggun-yu/dnsq/compare/v1.0.1...v1.0.2) (2024-07-10)
 
 
