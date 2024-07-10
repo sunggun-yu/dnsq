@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dnsq-server
+resources:
+- sa.yaml
+- service.yaml
+- deployment.yaml
+images:
+- name: dnsq-server
+  newName: ghcr.io/sunggun-yu/dnsq-server
+  newTag: 0.0.0

@@ -1,0 +1,3 @@
+FROM alpine
+COPY dnsq /usr/local/bin/dnsq
+ENTRYPOINT ["/usr/local/bin/dnsq"]

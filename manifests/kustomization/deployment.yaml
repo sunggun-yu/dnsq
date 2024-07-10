@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnsq-server
+  labels:
+    app: dnsq-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnsq-server
+  template:
+    metadata:
+      labels:
+        app: dnsq-server
+    spec:
+      serviceAccountName: dnsq-server
+      containers:
+        - name: dnsq-server
+          image: dnsq-server
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 8080

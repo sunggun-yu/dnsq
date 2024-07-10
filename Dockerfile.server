@@ -1,0 +1,9 @@
+FROM alpine
+
+WORKDIR /app
+
+COPY dnsq-server dnsq-server
+
+EXPOSE 8080
+
+CMD ["/app/dnsq-server"]

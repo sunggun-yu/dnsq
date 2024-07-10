@@ -1,0 +1,172 @@
+project_name: dnsq
+env:
+  - DESCRIPTION=A simple DNS Lookup utility
+  - HOMEPAGE=https://github.com/sunggun-yu/dnsq
+  - REGISTRY=ghcr.io/{{ if index .Env "GITHUB_REPOSITORY_OWNER"  }}{{ .Env.GITHUB_REPOSITORY_OWNER }}{{ else }}sunggun-yu{{ end }}
+  - PROJECT_SERVER_NAME={{ .ProjectName }}-server
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: cli
+    env:
+      - CGO_ENABLED=0
+    main: ./cli
+    binary: "{{ .ProjectName }}"
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+  - id: server
+    main: ./server
+    binary: "{{ .Env.PROJECT_SERVER_NAME }}"
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+universal_binaries:
+- replace: true
+
+# `changelog.disable: true` is supported from goreleaser v1.24.0 (since 2024-01-14)
+changelog:
+  disable: true
+
+archives:
+  - id: cli
+    builds:
+      - cli
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    wrap_in_directory: "true"
+
+  - id: server
+    builds:
+      - server
+    name_template: '{{ .Env.PROJECT_SERVER_NAME }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    wrap_in_directory: "true"
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-snapshot"
+
+brews:
+  # https://goreleaser.com/customization/homebrew/
+  - name: "dnsq"
+    ids:
+      - cli
+    repository:
+      owner: sunggun-yu
+      name: homebrew-tap
+    directory: Formula
+    homepage: '{{ .Env.HOMEPAGE }}'
+    description: '{{ .Env.DESCRIPTION }}'
+
+nfpms:
+  # https://goreleaser.com/customization/nfpm/
+  - id: cli
+    homepage: '{{ .Env.HOMEPAGE }}'
+    description: '{{ .Env.DESCRIPTION }}'
+    maintainer: Sunggun Yu <sunggun.dev@gmail.com>
+    license: MIT
+    vendor: Sunggun Yu
+    formats:
+    - apk
+    - deb
+    - rpm
+
+dockers:
+  # https://goreleaser.com/customization/docker/
+
+  - use: buildx
+    ids:
+      - cli
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile.cli
+    # extra_files:
+    #   - templates
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:latest-amd64"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - use: buildx
+    ids:
+      - cli
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile.cli
+    # extra_files:
+    #   - templates
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:latest-arm64v8"
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+  - use: buildx
+    ids:
+      - server
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile.server
+    # extra_files:
+    #   - templates
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-amd64"
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:latest-amd64"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - use: buildx
+    ids:
+      - server
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile.server
+    # extra_files:
+    #   - templates
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-arm64v8"
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:latest-arm64v8"
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - id: cli
+    name_template: "{{ .Env.REGISTRY }}/{{ .ProjectName }}:{{ .Version }}"
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "{{ .Env.REGISTRY }}/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+  - id: server
+    name_template: "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}"
+    image_templates:
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-amd64"
+      - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-arm64v8"
