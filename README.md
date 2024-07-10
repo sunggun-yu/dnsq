@@ -8,6 +8,7 @@
 - [Usage](#usage)
   - [CLI](#cli)
   - [Server](#server)
+    - [Lookup Page](#lookup-page)
     - [API Endpoint](#api-endpoint)
   - [Kubernetes Deployment](#kubernetes-deployment)
 
@@ -54,6 +55,14 @@ docker run -d --name dnsq-server \
   -p 8080:8080 \
   ghcr.io/sunggun-yu/dnsq-server
 ```
+
+#### Lookup Page
+
+The lookup page provides a simple form for querying DNS lookups. Simply enter the domain names you want to query, separated by commas or entered line by line, and click the 'Lookup' button.
+
+To access the lookup page, open your web browser and navigate to `http://localhost:8080`.
+
+> Note: The actual URL may differ based on your deployment method or chosen port number.
 
 #### API Endpoint
 

@@ -1,0 +1,50 @@
+async function lookupHosts() {
+  const hostsInput = document.getElementById('hostsInput').value;
+  const hostsArray = hostsInput.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+  const hosts = hostsArray.join(',');
+  const response = await fetch(`/api/lookup?hosts=${hosts}`);
+  const data = await response.json();
+  displayResults(data);
+}
+
+function displayResults(data) {
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+
+  // Create header row
+  const headerRow = document.createElement('tr');
+  ['Host', 'Type', 'Data'].forEach(headerText => {
+      const th = document.createElement('th');
+      th.textContent = headerText;
+      headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+
+  // Create rows for each host
+  Object.keys(data).forEach(host => {
+      data[host].forEach(record => {
+          const tr = document.createElement('tr');
+          const hostTd = document.createElement('td');
+          hostTd.textContent = record.host;
+          tr.appendChild(hostTd);
+
+          const typeTd = document.createElement('td');
+          typeTd.textContent = record.type;
+          tr.appendChild(typeTd);
+
+          const dataTd = document.createElement('td');
+          dataTd.textContent = record.data;
+          tr.appendChild(dataTd);
+
+          tbody.appendChild(tr);
+      });
+  });
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';
+  resultsDiv.appendChild(table);
+}
