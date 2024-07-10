@@ -109,6 +109,5 @@ Example response: (assuming piped with `jq` for pretty json)
 ### Kubernetes Deployment
 
 ```bash
-kubectl create ns dnsq-server
 kubectl apply -f https://raw.githubusercontent.com/sunggun-yu/dnsq/main/manifests/install.yaml
 ```
