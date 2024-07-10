@@ -2,6 +2,15 @@
 
 `dnsq` is a simple DNS lookup tool written in Go. It provides both a command-line interface and a REST API server for performing simple CNAME, A, and AAAA DNS queries with given multiple host names.
 
+- [Installation](#installation)
+  - [HomeBrew](#homebrew)
+  - [Docker](#docker)
+- [Usage](#usage)
+  - [CLI](#cli)
+  - [Server](#server)
+    - [API Endpoint](#api-endpoint)
+  - [Kubernetes Deployment](#kubernetes-deployment)
+
 ## Installation
 
 ### HomeBrew
@@ -26,13 +35,17 @@ dnsq google.com www.github.com aws.amazon.com www.facebook.com
 
 This will return DNS information for multiple hosts google.com, www.github.com, aws.amazon.com, and www.facebook.com
 
-### API Server
+### Server
 
 ```bash
 dnsq server
 ```
 
-By default, the server runs on port 8080.
+By default, the server runs on port 8080. You can specify a different port using the `--port` or `-p` flag.
+
+```bash
+dnsq server -p 9090
+```
 
 you can also use container image for server instance.
 
