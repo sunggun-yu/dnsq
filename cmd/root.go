@@ -16,9 +16,10 @@ var rootCmd = rootCommand()
 // rootCmd represents the base command when called without any subcommands
 func rootCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "dlk [domains...]",
-		Short: "Look up DNS records for one or more domains",
-		Args:  cobra.MinimumNArgs(1),
+		Use:           "dnsq [domains...]",
+		Short:         "Look up DNS records for one or more domains",
+		SilenceErrors: true,
+		Args:          cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			for _, domain := range args {
 				records := dnslookup.GetDNSRecords(domain)
@@ -36,6 +37,11 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+// Set the version of cmd
+func SetVersion(version string) {
+	rootCmd.Version = version
 }
 
 func init() {
