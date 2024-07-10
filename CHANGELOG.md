@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/sunggun-yu/dnsq/compare/v1.0.1...v1.0.2) (2024-07-10)
+
+
+### Bug Fixes
+
+* simply run server from cli sub-command ([037d7c5](https://github.com/sunggun-yu/dnsq/commit/037d7c5ad897871203ea11d3ffee6a3e71c91e74))
+
 ## [1.0.1](https://github.com/sunggun-yu/dnsq/compare/v1.0.0...v1.0.1) (2024-07-10)
 
 
