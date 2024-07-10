@@ -97,8 +97,6 @@ dockers:
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile.server
-    extra_files:
-      - static
     image_templates:
       - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-amd64"
       - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:latest-amd64"
@@ -113,8 +111,6 @@ dockers:
     goos: linux
     goarch: arm64
     dockerfile: Dockerfile.server
-    extra_files:
-      - static
     image_templates:
       - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:{{ .Version }}-arm64v8"
       - "{{ .Env.REGISTRY }}/{{ .Env.PROJECT_SERVER_NAME }}:latest-arm64v8"
