@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/sunggun-yu/dnsq/compare/v1.0.3...v1.1.0) (2024-07-10)
+
+
+### Features
+
+* static html page for lookup dns ([0ce0d52](https://github.com/sunggun-yu/dnsq/commit/0ce0d52745c120e9b10d5eee8f59416d6a86785c))
+
 ## [1.0.3](https://github.com/sunggun-yu/dnsq/compare/v1.0.2...v1.0.3) (2024-07-10)
 
 
