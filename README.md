@@ -2,6 +2,7 @@
 
 `dnsq` is a simple DNS lookup tool written in Go. It provides both a command-line interface and a REST API server for performing simple CNAME, A, and AAAA DNS queries with given multiple host names.
 
+- [Motivation](#motivation)
 - [Installation](#installation)
   - [HomeBrew](#homebrew)
   - [Docker](#docker)
@@ -11,6 +12,15 @@
     - [Lookup Page](#lookup-page)
     - [API Endpoint](#api-endpoint)
   - [Kubernetes Deployment](#kubernetes-deployment)
+
+## Motivation
+
+I created this DNS lookup tool for the following reasons:
+
+1. To enable looking up multiple DNS entries simultaneously.
+1. To view DNS entries in server environments like Kubernetes clusters, as my local DNS lookup results were affected by company proxy settings.
+
+These features make it easier to troubleshoot DNS-related issues.
 
 ## Installation
 
@@ -32,6 +42,12 @@ docker pull ghcr.io/sunggun-yu/dnsq
 
 ```bash
 dnsq google.com www.github.com aws.amazon.com www.facebook.com
+```
+
+or, using docker image
+
+```bash
+docker run ghcr.io/sunggun-yu/dnsq google.com aws.amazon.com 
 ```
 
 This will return DNS information for multiple hosts google.com, www.github.com, aws.amazon.com, and www.facebook.com
