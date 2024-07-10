@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/sunggun-yu/dnsq/compare/v1.1.0...v1.1.1) (2024-07-10)
+
+
+### Bug Fixes
+
+* embed static directory to serve webpage from cli ([ae0b3b6](https://github.com/sunggun-yu/dnsq/commit/ae0b3b6ef80480dc704183e81219f4885a838c53))
+
 ## [1.1.0](https://github.com/sunggun-yu/dnsq/compare/v1.0.3...v1.1.0) (2024-07-10)
 
 
