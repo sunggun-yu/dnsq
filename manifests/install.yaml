@@ -36,7 +36,7 @@ spec:
         app: dnsq-server
     spec:
       containers:
-      - image: ghcr.io/sunggun-yu/dnsq-server:0.0.0
+      - image: ghcr.io/sunggun-yu/dnsq-server:1.0.0
         imagePullPolicy: IfNotPresent
         name: dnsq-server
         ports:

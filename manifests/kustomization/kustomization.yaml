@@ -8,4 +8,4 @@ resources:
 images:
 - name: dnsq-server
   newName: ghcr.io/sunggun-yu/dnsq-server
-  newTag: 0.0.0
+  newTag: 1.0.0
