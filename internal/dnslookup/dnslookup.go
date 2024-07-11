@@ -26,12 +26,6 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 	currentHost := hostname
 	isWildcard := false
 
-	if strings.HasPrefix(hostname, "*.") {
-		randomSubdomain := randomHostname()
-		currentHost = randomSubdomain + hostname[1:]
-		isWildcard = true
-	}
-
 	// CNAME lookup
 	cname, err := net.LookupCNAME(currentHost)
 	if err == nil && cname != currentHost+"." {
@@ -40,6 +34,12 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 		records = append(records, models.DNSRecord{Host: currentHost, Type: "CNAME", Data: cname})
 		// replace currentHost with the CNAME
 		currentHost = cname
+	}
+
+	if strings.HasPrefix(currentHost, "*.") {
+		randomSubdomain := randomHostname()
+		currentHost = randomSubdomain + hostname[1:]
+		isWildcard = true
 	}
 
 	// A and AAAA lookup
