@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/sunggun-yu/dnsq/compare/v1.1.1...v1.2.0) (2024-07-11)
+
+
+### Features
+
+* lookup wildcard domain with random sub ([9f46179](https://github.com/sunggun-yu/dnsq/commit/9f4617922a052fc4c2b598d9abb838195cf99150))
+
 ## [1.1.1](https://github.com/sunggun-yu/dnsq/compare/v1.1.0...v1.1.1) (2024-07-10)
 
 
