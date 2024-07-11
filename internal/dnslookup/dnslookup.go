@@ -36,6 +36,7 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 		currentHost = cname
 	}
 
+	// check if it is a wildcard
 	if strings.HasPrefix(currentHost, "*.") {
 		randomSubdomain := randomHostname()
 		currentHost = randomSubdomain + hostname[1:]
