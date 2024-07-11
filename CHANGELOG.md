@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/sunggun-yu/dnsq/compare/v1.2.0...v1.2.1) (2024-07-11)
+
+
+### Bug Fixes
+
+* case wildcard is cname ([ad8ed2f](https://github.com/sunggun-yu/dnsq/commit/ad8ed2f7fb9b53bdba9c56ca42e45429dd7fa5eb))
+
 ## [1.2.0](https://github.com/sunggun-yu/dnsq/compare/v1.1.1...v1.2.0) (2024-07-11)
 
 
