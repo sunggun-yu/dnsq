@@ -7,4 +7,4 @@ resources:
 images:
 - name: dnsq-server
   newName: ghcr.io/sunggun-yu/dnsq-server
-  newTag: 1.2.0
+  newTag: 1.2.1
