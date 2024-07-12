@@ -5,6 +5,8 @@ import (
 	"net"
 	"strings"
 
+	"log"
+
 	"github.com/sunggun-yu/dnsq/internal/models"
 )
 
@@ -26,21 +28,31 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 	currentHost := hostname
 	isWildcard := false
 
-	// CNAME lookup
-	cname, err := net.LookupCNAME(currentHost)
-	if err == nil && cname != currentHost+"." {
-		// remove trailing dot
-		cname = strings.TrimSuffix(cname, ".")
-		records = append(records, models.DNSRecord{Host: currentHost, Type: "CNAME", Data: cname})
-		// replace currentHost with the CNAME
-		currentHost = cname
-	}
-
 	// check if it is a wildcard
 	if strings.HasPrefix(currentHost, "*.") {
 		randomSubdomain := randomHostname()
 		currentHost = randomSubdomain + hostname[1:]
 		isWildcard = true
+	}
+
+	// CNAME lookup
+	cname, err := net.LookupCNAME(currentHost)
+	log.Printf("CNAME for %s: %s", currentHost, cname)
+
+	if err == nil && cname != currentHost+"." {
+		// remove trailing dot
+		cname = strings.TrimSuffix(cname, ".")
+		cnameHost := currentHost
+
+		// if it is a wildcard, set the original hostname to the records
+		if isWildcard {
+			cnameHost = hostname
+			isWildcard = false // reset the wildcard flag
+		}
+
+		records = append(records, models.DNSRecord{Host: cnameHost, Type: "CNAME", Data: cname})
+		// replace currentHost with the CNAME
+		currentHost = cname
 	}
 
 	// A and AAAA lookup
