@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/sunggun-yu/dnsq/compare/v1.2.1...v1.2.2) (2024-07-12)
+
+
+### Bug Fixes
+
+* wildcard cname wasn't correct in k8s ([10954c9](https://github.com/sunggun-yu/dnsq/commit/10954c99da841a4e9ac392ca9a5ef38c3891b1ac))
+
 ## [1.2.1](https://github.com/sunggun-yu/dnsq/compare/v1.2.0...v1.2.1) (2024-07-11)
 
 
