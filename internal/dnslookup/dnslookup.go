@@ -5,8 +5,6 @@ import (
 	"net"
 	"strings"
 
-	"log"
-
 	"github.com/sunggun-yu/dnsq/internal/models"
 )
 
@@ -37,7 +35,6 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 
 	// CNAME lookup
 	cname, err := net.LookupCNAME(currentHost)
-	log.Printf("CNAME for %s: %s", currentHost, cname)
 
 	if err == nil && cname != currentHost+"." {
 		// remove trailing dot
