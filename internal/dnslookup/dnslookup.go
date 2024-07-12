@@ -23,6 +23,12 @@ func randomHostname() string {
 // GetDNSRecords returns DNS records for a given hostname
 func GetDNSRecords(hostname string) []models.DNSRecord {
 	var records []models.DNSRecord
+	resolveDNS(hostname, &records)
+	return records
+}
+
+// resolveDNS resolves DNS records for a given hostname. It is a recursive function that resolves CNAME and A/AAAA records.
+func resolveDNS(hostname string, records *[]models.DNSRecord) {
 	currentHost := hostname
 	isWildcard := false
 
@@ -47,9 +53,15 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 			isWildcard = false // reset the wildcard flag
 		}
 
-		records = append(records, models.DNSRecord{Host: cnameHost, Type: "CNAME", Data: cname})
+		*records = append(*records, models.DNSRecord{Host: cnameHost, Type: "CNAME", Data: cname})
 		// replace currentHost with the CNAME
 		currentHost = cname
+
+		// recursively resolve the CNAME
+		resolveDNS(currentHost, records)
+		// no need to continue if it is a CNAME
+		// so that, final CNAME will resolve the A/AAAA records
+		return
 	}
 
 	// A and AAAA lookup
@@ -63,12 +75,10 @@ func GetDNSRecords(hostname string) []models.DNSRecord {
 	if err == nil {
 		for _, ip := range ips {
 			if ipv4 := ip.To4(); ipv4 != nil {
-				records = append(records, models.DNSRecord{Host: currentHost, Type: "A", Data: ipv4.String()})
+				*records = append(*records, models.DNSRecord{Host: currentHost, Type: "A", Data: ipv4.String()})
 			} else {
-				records = append(records, models.DNSRecord{Host: currentHost, Type: "AAAA", Data: ip.String()})
+				*records = append(*records, models.DNSRecord{Host: currentHost, Type: "AAAA", Data: ip.String()})
 			}
 		}
 	}
-
-	return records
 }

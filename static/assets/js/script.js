@@ -14,7 +14,7 @@ function displayResults(data) {
 
   // Create header row
   const headerRow = document.createElement('tr');
-  ['Host', 'Type', 'Data'].forEach(headerText => {
+  ['Domain', 'Host', 'Type', 'Data'].forEach(headerText => {
       const th = document.createElement('th');
       th.textContent = headerText;
       headerRow.appendChild(th);
@@ -22,9 +22,22 @@ function displayResults(data) {
   thead.appendChild(headerRow);
 
   // Create rows for each host
-  Object.keys(data).forEach(host => {
-      data[host].forEach(record => {
+  Object.keys(data).forEach(hostKey => {
+      const hostRecords = data[hostKey];
+
+      // Merge cells for the host key
+      const hostRowSpan = hostRecords.length;
+      hostRecords.forEach((record, index) => {
           const tr = document.createElement('tr');
+
+          // Add host key column only for the first row
+          if (index === 0) {
+              const hostKeyTd = document.createElement('td');
+              hostKeyTd.textContent = hostKey;
+              hostKeyTd.rowSpan = hostRowSpan;
+              tr.appendChild(hostKeyTd);
+          }
+
           const hostTd = document.createElement('td');
           hostTd.textContent = record.host;
           tr.appendChild(hostTd);
