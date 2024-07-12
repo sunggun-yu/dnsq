@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/sunggun-yu/dnsq/compare/v1.2.3...v1.3.0) (2024-07-12)
+
+
+### Features
+
+* resolve cname recursively ([56b341a](https://github.com/sunggun-yu/dnsq/commit/56b341a3c8629e6230bdb8b5e4fbc33dbfb09c45))
+
 ## [1.2.3](https://github.com/sunggun-yu/dnsq/compare/v1.2.2...v1.2.3) (2024-07-12)
 
 
