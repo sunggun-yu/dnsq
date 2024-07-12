@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/sunggun-yu/dnsq/compare/v1.2.2...v1.2.3) (2024-07-12)
+
+
+### Bug Fixes
+
+* remove log for cli ([9b7d8ca](https://github.com/sunggun-yu/dnsq/commit/9b7d8ca824d0a1f4e91575161ee7fe63c6b2afe1))
+
 ## [1.2.2](https://github.com/sunggun-yu/dnsq/compare/v1.2.1...v1.2.2) (2024-07-12)
 
 
