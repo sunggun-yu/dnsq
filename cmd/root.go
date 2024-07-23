@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"io"
 	"os"
 
+	"github.com/jedib0t/go-pretty/table"
 	"github.com/spf13/cobra"
 	"github.com/sunggun-yu/dnsq/internal/dnslookup"
 	"github.com/sunggun-yu/dnsq/internal/models"
@@ -58,7 +58,18 @@ func init() {
 
 // printRecords prints DNS records to the console
 func printRecords(w io.Writer, records []models.DNSRecord) {
-	for _, record := range records {
-		w.Write([]byte(fmt.Sprintf("%s %s %s\n", record.Host, record.Type, record.Data)))
+
+	tw := table.NewWriter()
+	tw.SetStyle(table.StyleLight)
+	tw.Style().Options.DrawBorder = true
+	tw.Style().Options.SeparateHeader = true
+	tw.Style().Options.SeparateRows = false
+	tw.Style().Options.SeparateColumns = true
+
+	tw.AppendHeader(table.Row{"Host", "Type", "Data"})
+	for _, rerecords := range records {
+		tw.AppendRow(table.Row{rerecords.Host, rerecords.Type, rerecords.Data})
 	}
+	w.Write([]byte(tw.Render()))
+	w.Write([]byte("\n"))
 }
