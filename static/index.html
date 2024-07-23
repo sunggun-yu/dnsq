@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNS Lookup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/static/assets/css/style.css">
     <script src="/static/assets/js/script.js"></script>
 </head>
 <body>
-    <h1>DNS Lookup</h1>
-    <textarea id="hostsInput" rows="10" cols="50" placeholder="Enter one host per line or separated by commas (e.g., example.com, google.com)
-example.com
-google.com"
-></textarea><br>
-    <button onclick="lookupHosts()">Lookup</button>
-    <h2>Results</h2>
-    <div id="results"></div>
+    <div class="container">
+        <h1>DNS Lookup</h1>
+        <div class="input-container">
+            <textarea id="hostsInput" rows="10" cols="50" placeholder="Enter one host per line or separated by commas"></textarea>
+            <div class="example-section">
+                <p><strong>Example:</strong></p>
+                <pre>example.com
+google.com, yahoo.com
+aws.amazon.com</pre>
+            </div>
+            <button onclick="lookupHosts()" class="lookup-button"><i class="fas fa-search"></i> Lookup</button>
+        </div>
+        <div class="shareable-url-container">
+            <input type="text" id="shareableUrl" readonly>
+            <button id="copyButton" onclick="copyShareableUrl()" class="copy-button"><i class="fas fa-copy"></i> Copy URL</button>
+        </div>
+        <h2>Results</h2>
+        <div id="results"></div>
+    </div>
 </body>
 </html>

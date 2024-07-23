@@ -5,6 +5,7 @@ async function lookupHosts() {
   const response = await fetch(`/api/lookup?hosts=${hosts}`);
   const data = await response.json();
   displayResults(data);
+  updateShareableUrl(hosts);
 }
 
 function displayResults(data) {
@@ -61,3 +62,35 @@ function displayResults(data) {
   resultsDiv.innerHTML = '';
   resultsDiv.appendChild(table);
 }
+
+function updateShareableUrl(hosts) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('hosts', hosts);
+  const shareableUrl = url.toString();
+  
+  const shareableUrlInput = document.getElementById('shareableUrl');
+  shareableUrlInput.value = shareableUrl;
+}
+
+function copyShareableUrl() {
+  const shareableUrlInput = document.getElementById('shareableUrl');
+  shareableUrlInput.select();
+  document.execCommand('copy');
+  
+  const copyButton = document.getElementById('copyButton');
+  copyButton.textContent = 'Copied!';
+  setTimeout(() => {
+    copyButton.textContent = 'Copy URL';
+  }, 2000);
+}
+
+function loadFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const hosts = urlParams.get('hosts');
+  if (hosts) {
+    document.getElementById('hostsInput').value = hosts.split(',').join('\n');
+    lookupHosts();
+  }
+}
+
+window.onload = loadFromUrl;

@@ -1,14 +1,145 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.input-container, .shareable-url-container, h1, h2, #results {
+  padding: 0 10px;
+}
+
+h1, h2 {
+  color: #2c3e50;
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.example-section {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.example-section p {
+  margin: 0 0 5px 0;
+}
+
+.example-section pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+.lookup-button {
+  margin-top: 10px;
+}
+
+.shareable-url-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#shareableUrl {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+}
+
+.copy-button {
+  border-radius: 0 4px 4px 0;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
+  min-width: 600px;
 }
+
 table, th, td {
-  border: 1px solid black;
+  border: 1px solid #ddd;
 }
+
 th {
   background-color: #f2f2f2;
+  font-weight: bold;
 }
+
 th, td {
-  padding: 10px;
+  padding: 12px;
   text-align: left;
+  word-break: break-word;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+@media (max-width: 768px) {
+  body {
+      padding: 10px;
+      max-width: 100%;
+  }
+
+  .container {
+      padding: 10px;
+  }
+
+  .input-container, .shareable-url-container, h1, h2, #results {
+      padding: 0 5px;
+  }
+
+  th, td {
+      padding: 8px;
+      font-size: 14px;
+  }
+
+  button {
+      padding: 8px 16px;
+  }
+
+  .example-section {
+      font-size: 0.8em;
+  }
 }
