@@ -80,6 +80,8 @@ To access the lookup page, open your web browser and navigate to `http://localho
 
 > Note: The actual URL may differ based on your deployment method or chosen port number.
 
+![webview](docs/assets/webview.png)
+
 #### API Endpoint
 
 The API exposes a single endpoint for DNS lookups:
