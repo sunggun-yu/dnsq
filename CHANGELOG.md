@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/sunggun-yu/dnsq/compare/v1.3.0...v1.4.0) (2024-07-23)
+
+
+### Features
+
+* improve ui ([6cdb547](https://github.com/sunggun-yu/dnsq/commit/6cdb547c33e28c1f230a45a1605ac439e2189f23))
+* table view for cli ([a5889a1](https://github.com/sunggun-yu/dnsq/commit/a5889a13933d7e418028ca5d566cbaa8388f839a))
+
 ## [1.3.0](https://github.com/sunggun-yu/dnsq/compare/v1.2.3...v1.3.0) (2024-07-12)
 
 
