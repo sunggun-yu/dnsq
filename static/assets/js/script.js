@@ -1,7 +1,10 @@
 async function lookupHosts() {
-  const hostsInput = document.getElementById('hostsInput').value;
-  const hostsArray = hostsInput.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-  const hosts = hostsArray.join(',');
+  const hostsInput = document.getElementById("hostsInput").value;
+  const hostsArray = hostsInput
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const hosts = hostsArray.join(",");
   const response = await fetch(`/api/lookup?hosts=${hosts}`);
   const data = await response.json();
   displayResults(data);
@@ -9,86 +12,112 @@ async function lookupHosts() {
 }
 
 function displayResults(data) {
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const tbody = document.createElement('tbody');
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
+
+  if (Object.keys(data).length === 0) {
+    const noRecordsMessage = document.createElement("p");
+    noRecordsMessage.textContent = "No records found";
+    resultsDiv.appendChild(noRecordsMessage);
+    return;
+  }
+
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const tbody = document.createElement("tbody");
 
   // Create header row
-  const headerRow = document.createElement('tr');
-  ['Domain', 'Host', 'Type', 'Data'].forEach(headerText => {
-      const th = document.createElement('th');
-      th.textContent = headerText;
-      headerRow.appendChild(th);
+  const headerRow = document.createElement("tr");
+  ["Domain", "Host", "Type", "Data"].forEach((headerText) => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    headerRow.appendChild(th);
   });
   thead.appendChild(headerRow);
 
   // Create rows for each host
-  Object.keys(data).forEach(hostKey => {
-      const hostRecords = data[hostKey];
+  Object.keys(data).forEach((hostKey) => {
+    const hostRecords = data[hostKey];
 
+    if (!Array.isArray(hostRecords) || hostRecords.length === 0) {
+      const tr = document.createElement("tr");
+      const domainTd = document.createElement("td");
+      domainTd.textContent = hostKey;
+      tr.appendChild(domainTd);
+
+      const hostTd = document.createElement("td");
+      tr.appendChild(hostTd);
+
+      const typeTd = document.createElement("td");
+      tr.appendChild(typeTd);
+
+      const dataTd = document.createElement("td");
+      dataTd.textContent = "No record found";
+      tr.appendChild(dataTd);
+
+      tbody.appendChild(tr);
+    } else {
       // Merge cells for the host key
       const hostRowSpan = hostRecords.length;
       hostRecords.forEach((record, index) => {
-          const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
 
-          // Add host key column only for the first row
-          if (index === 0) {
-              const hostKeyTd = document.createElement('td');
-              hostKeyTd.textContent = hostKey;
-              hostKeyTd.rowSpan = hostRowSpan;
-              tr.appendChild(hostKeyTd);
-          }
+        // Add host key column only for the first row
+        if (index === 0) {
+          const hostKeyTd = document.createElement("td");
+          hostKeyTd.textContent = hostKey;
+          hostKeyTd.rowSpan = hostRowSpan;
+          tr.appendChild(hostKeyTd);
+        }
 
-          const hostTd = document.createElement('td');
-          hostTd.textContent = record.host;
-          tr.appendChild(hostTd);
+        const hostTd = document.createElement("td");
+        hostTd.textContent = record.host || "";
+        tr.appendChild(hostTd);
 
-          const typeTd = document.createElement('td');
-          typeTd.textContent = record.type;
-          tr.appendChild(typeTd);
+        const typeTd = document.createElement("td");
+        typeTd.textContent = record.type || "";
+        tr.appendChild(typeTd);
 
-          const dataTd = document.createElement('td');
-          dataTd.textContent = record.data;
-          tr.appendChild(dataTd);
+        const dataTd = document.createElement("td");
+        dataTd.textContent = record.data || "";
+        tr.appendChild(dataTd);
 
-          tbody.appendChild(tr);
+        tbody.appendChild(tr);
       });
+    }
   });
 
   table.appendChild(thead);
   table.appendChild(tbody);
-
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = '';
   resultsDiv.appendChild(table);
 }
 
 function updateShareableUrl(hosts) {
   const url = new URL(window.location.href);
-  url.searchParams.set('hosts', hosts);
+  url.searchParams.set("hosts", hosts);
   const shareableUrl = url.toString();
-  
-  const shareableUrlInput = document.getElementById('shareableUrl');
+
+  const shareableUrlInput = document.getElementById("shareableUrl");
   shareableUrlInput.value = shareableUrl;
 }
 
 function copyShareableUrl() {
-  const shareableUrlInput = document.getElementById('shareableUrl');
+  const shareableUrlInput = document.getElementById("shareableUrl");
   shareableUrlInput.select();
-  document.execCommand('copy');
-  
-  const copyButton = document.getElementById('copyButton');
-  copyButton.textContent = 'Copied!';
+  document.execCommand("copy");
+
+  const copyButton = document.getElementById("copyButton");
+  copyButton.textContent = "Copied!";
   setTimeout(() => {
-    copyButton.textContent = 'Copy URL';
+    copyButton.textContent = "Copy URL";
   }, 2000);
 }
 
 function loadFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
-  const hosts = urlParams.get('hosts');
+  const hosts = urlParams.get("hosts");
   if (hosts) {
-    document.getElementById('hostsInput').value = hosts.split(',').join('\n');
+    document.getElementById("hostsInput").value = hosts.split(",").join("\n");
     lookupHosts();
   }
 }
