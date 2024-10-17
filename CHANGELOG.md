@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/sunggun-yu/dnsq/compare/v1.4.0...v1.5.0) (2024-10-17)
+
+
+### Features
+
+* **cli:** match the output print same as web ui format ([46a5e14](https://github.com/sunggun-yu/dnsq/commit/46a5e14821c24459592c9622e56d2f13f54b2efd))
+
+
+### Bug Fixes
+
+* displaying no dns record ([d6c1d21](https://github.com/sunggun-yu/dnsq/commit/d6c1d2108f2c99df48b1e56079b430eb3c428234))
+
 ## [1.4.0](https://github.com/sunggun-yu/dnsq/compare/v1.3.0...v1.4.0) (2024-07-23)
 
 
