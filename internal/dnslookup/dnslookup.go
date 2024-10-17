@@ -21,7 +21,19 @@ func randomHostname() string {
 }
 
 // GetDNSRecords returns DNS records for a given hostname
-func GetDNSRecords(hostname string) []models.DNSRecord {
+func GetDNSRecords(hosts []string) map[string][]models.DNSRecord {
+	result := make(map[string][]models.DNSRecord)
+	for _, host := range hosts {
+		host = strings.TrimSpace(host)
+		if host != "" {
+			result[host] = dnsRecords(host)
+		}
+	}
+	return result
+}
+
+// GetDNSRecords returns DNS records for a given hostname
+func dnsRecords(hostname string) []models.DNSRecord {
 	var records []models.DNSRecord
 	resolveDNS(hostname, &records)
 	return records

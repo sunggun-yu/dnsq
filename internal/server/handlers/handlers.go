@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sunggun-yu/dnsq/internal/dnslookup"
-	"github.com/sunggun-yu/dnsq/internal/models"
 )
 
 // DNSLookupHandler handles DNS lookup requests
@@ -19,14 +18,8 @@ func DNSLookupHandler(c *gin.Context) {
 	}
 
 	hosts := strings.Split(hostsParam, ",")
-	results := make(map[string][]models.DNSRecord)
-	for _, host := range hosts {
-		host = strings.TrimSpace(host)
-		if host != "" {
-			results[host] = dnslookup.GetDNSRecords(host)
-		}
-	}
+	results := dnslookup.GetDNSRecords(hosts)
 
 	// return 200 OK with the DNS records
 	c.JSON(http.StatusOK, results)
-} 
+}

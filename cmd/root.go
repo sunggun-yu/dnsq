@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/jedib0t/go-pretty/table"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 	"github.com/sunggun-yu/dnsq/internal/dnslookup"
 	"github.com/sunggun-yu/dnsq/internal/models"
@@ -21,10 +21,8 @@ func rootCommand() *cobra.Command {
 		SilenceErrors: true,
 		Args:          cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			for _, domain := range args {
-				records := dnslookup.GetDNSRecords(domain)
-				printRecords(cmd.OutOrStdout(), records)
-			}
+			records := dnslookup.GetDNSRecords(args)
+			printRecords(cmd.OutOrStdout(), records)
 		},
 	}
 	return cmd
@@ -57,7 +55,7 @@ func init() {
 }
 
 // printRecords prints DNS records to the console
-func printRecords(w io.Writer, records []models.DNSRecord) {
+func printRecords(w io.Writer, records map[string][]models.DNSRecord) {
 
 	tw := table.NewWriter()
 	tw.SetStyle(table.StyleLight)
@@ -66,10 +64,16 @@ func printRecords(w io.Writer, records []models.DNSRecord) {
 	tw.Style().Options.SeparateRows = false
 	tw.Style().Options.SeparateColumns = true
 
-	tw.AppendHeader(table.Row{"Host", "Type", "Data"})
-	for _, rerecords := range records {
-		tw.AppendRow(table.Row{rerecords.Host, rerecords.Type, rerecords.Data})
+	tw.AppendHeader(table.Row{"Domain", "Host", "Type", "Data"})
+	for domain, data := range records {
+		for _, d := range data {
+			tw.AppendRow(table.Row{domain, d.Host, d.Type, d.Data})
+		}
 	}
+	tw.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, AutoMerge: true},
+	})
+	tw.Style().Options.SeparateRows = true
 	w.Write([]byte(tw.Render()))
 	w.Write([]byte("\n"))
 }
