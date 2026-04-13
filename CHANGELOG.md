@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/sunggun-yu/dnsq/compare/v1.5.0...v2.0.0) (2026-04-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* API response format changed from flat map[string][]DNSRecord to LookupResponse{results: []NameserverResult}. All consumers of /api/lookup must update to the new response structure.
+
+### Features
+
+* v2 — multi-nameserver comparison, modernized UI, miekg/dns ([#14](https://github.com/sunggun-yu/dnsq/issues/14)) ([1e6b192](https://github.com/sunggun-yu/dnsq/commit/1e6b192931ce2c5799e7b7f958449428e3cdd078))
+
 ## [1.5.0](https://github.com/sunggun-yu/dnsq/compare/v1.4.0...v1.5.0) (2024-10-17)
 
 
