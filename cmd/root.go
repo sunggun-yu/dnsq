@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
@@ -15,21 +17,47 @@ var rootCmd = rootCommand()
 
 // rootCmd represents the base command when called without any subcommands
 func rootCommand() *cobra.Command {
+
+	var nameservers []string
+	var includeDefault bool
+	var ipv6 bool
+
 	cmd := &cobra.Command{
 		Use:           "dnsq [domains...]",
 		Short:         "Look up DNS records for one or more domains",
 		SilenceErrors: true,
 		Args:          cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			records := dnslookup.GetDNSRecords(args)
-			printRecords(cmd.OutOrStdout(), records)
+			// Build nameserver list
+			finalNameservers := buildCLINameserverList(nameservers, includeDefault)
+			results := dnslookup.GetDNSRecords(args, finalNameservers, ipv6)
+			printRecords(cmd.OutOrStdout(), results)
 		},
 	}
+
+	cmd.Flags().StringSliceVarP(&nameservers, "nameserver", "n", nil, "nameserver to query (can be specified multiple times)")
+	cmd.Flags().BoolVarP(&includeDefault, "include-default", "d", false, "include default nameserver alongside custom nameservers")
+	cmd.Flags().BoolVar(&ipv6, "ipv6", false, "include AAAA (IPv6) records")
+
 	return cmd
 }
 
+// buildCLINameserverList constructs the final list of nameservers for CLI usage.
+func buildCLINameserverList(nameservers []string, includeDefault bool) []string {
+	defaults := dnslookup.GetDefaultNameservers()
+
+	if len(nameservers) == 0 {
+		return defaults
+	}
+
+	if includeDefault {
+		return append(defaults, nameservers...)
+	}
+
+	return nameservers
+}
+
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -43,37 +71,60 @@ func SetVersion(version string) {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dlk.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-// printRecords prints DNS records to the console
-func printRecords(w io.Writer, records map[string][]models.DNSRecord) {
+// printRecords prints DNS records to the console, one table per nameserver.
+func printRecords(w io.Writer, results []models.NameserverResult) {
+	for i, nsResult := range results {
+		if i > 0 {
+			fmt.Fprintln(w)
+		}
 
-	tw := table.NewWriter()
-	tw.SetStyle(table.StyleLight)
-	tw.Style().Options.DrawBorder = true
-	tw.Style().Options.SeparateHeader = true
-	tw.Style().Options.SeparateRows = false
-	tw.Style().Options.SeparateColumns = true
+		// Print nameserver header
+		nsDisplay := dnslookup.FormatNameserver(nsResult.Nameserver)
+		fmt.Fprintf(w, "Nameserver: %s\n", nsDisplay)
 
-	tw.AppendHeader(table.Row{"Domain", "Host", "Type", "Data"})
-	for domain, data := range records {
-		for _, d := range data {
-			tw.AppendRow(table.Row{domain, d.Host, d.Type, d.Data})
+		// Show error if nameserver is unreachable
+		if nsResult.Error != "" {
+			fmt.Fprintf(w, "  ✗ Error: %s\n", nsResult.Error)
+			continue
+		}
+
+		tw := table.NewWriter()
+		tw.SetStyle(table.StyleLight)
+		tw.Style().Options.DrawBorder = true
+		tw.Style().Options.SeparateHeader = true
+		tw.Style().Options.SeparateRows = true
+		tw.Style().Options.SeparateColumns = true
+
+		tw.AppendHeader(table.Row{"Domain", "Host", "Type", "Data"})
+
+		hasRows := false
+		for domain, records := range nsResult.Results {
+			if len(records) == 0 {
+				tw.AppendRow(table.Row{domain, "", "", "No record found"})
+				hasRows = true
+			} else {
+				for _, r := range records {
+					tw.AppendRow(table.Row{domain, r.Host, r.Type, r.Data})
+					hasRows = true
+				}
+			}
+		}
+
+		tw.SetColumnConfigs([]table.ColumnConfig{
+			{Number: 1, AutoMerge: true},
+		})
+
+		if hasRows {
+			fmt.Fprintln(w, tw.Render())
 		}
 	}
-	tw.SetColumnConfigs([]table.ColumnConfig{
-		{Number: 1, AutoMerge: true},
-	})
-	tw.Style().Options.SeparateRows = true
-	w.Write([]byte(tw.Render()))
-	w.Write([]byte("\n"))
+}
+
+// FormatResultsAsText formats results as plain text tables (for copy-as-text in web UI).
+func FormatResultsAsText(results []models.NameserverResult) string {
+	var sb strings.Builder
+	printRecords(&sb, results)
+	return sb.String()
 }

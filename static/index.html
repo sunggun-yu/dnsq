@@ -1,32 +1,354 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DNS Lookup</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="/static/assets/css/style.css">
-    <script src="/static/assets/js/script.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>DNS Lookup</h1>
-        <div class="input-container">
-            <textarea id="hostsInput" rows="10" cols="50" placeholder="Enter one host per line or separated by commas"></textarea>
-            <div class="example-section">
-                <p><strong>Example:</strong></p>
-                <pre>example.com
-google.com, yahoo.com
-aws.amazon.com</pre>
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DNSQ — DNS Lookup</title>
+    <link rel="stylesheet" href="/static/assets/css/tailwind.css" />
+    <link rel="stylesheet" href="/static/assets/css/style.css" />
+  </head>
+  <body
+    class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col transition-colors duration-200"
+  >
+    <!-- Header -->
+    <header
+      class="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+    >
+      <div
+        class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-zinc-500 dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <div class="flex items-baseline gap-2">
+            <h1 class="text-lg font-semibold tracking-tight">DNSQ</h1>
+            <span class="text-xs text-zinc-400 dark:text-zinc-500 hidden sm:inline">DNS Lookup &amp; Compare</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <a
+            href="https://github.com/sunggun-yu/dnsq"
+            target="_blank"
+            rel="noopener"
+            class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors flex items-center gap-1"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            GitHub
+          </a>
+          <button
+            onclick="toggleTheme()"
+            id="themeToggle"
+            class="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 transition-colors"
+            aria-label="Toggle theme"
+          >
+            <svg
+              id="sunIcon"
+              class="w-4 h-4 hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg
+              id="moonIcon"
+              class="w-4 h-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+      <!-- Input Card -->
+      <div
+        class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm"
+      >
+        <div class="px-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
+          <h2
+            class="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide"
+          >
+            DNS Lookup
+          </h2>
+        </div>
+        <div class="p-4 space-y-4">
+          <!-- Domains -->
+          <div>
+            <label
+              for="hostsInput"
+              class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+              >Domains</label
+            >
+            <textarea
+              id="hostsInput"
+              rows="5"
+              class="w-full px-3 py-2 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 focus:border-transparent resize-vertical transition-shadow"
+              placeholder="Enter one host per line or separated by commas&#10;e.g.&#10;google.com&#10;www.github.com, aws.amazon.com"
+            ></textarea>
+          </div>
+
+          <!-- Nameservers -->
+          <div>
+            <label
+              for="nameserverInput"
+              class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+              >Nameservers
+              <span class="normal-case text-zinc-400 dark:text-zinc-500"
+                >(optional)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="nameserverInput"
+              class="w-full px-3 py-2 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm font-mono placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 focus:border-transparent transition-shadow"
+              placeholder="8.8.8.8, 1.1.1.1"
+            />
+          </div>
+
+          <!-- Options -->
+          <div class="flex flex-wrap gap-5">
+            <label
+              class="flex items-center gap-2.5 text-sm text-zinc-600 dark:text-zinc-400 cursor-pointer select-none"
+            >
+              <button
+                type="button"
+                role="switch"
+                aria-checked="false"
+                id="includeAAAA"
+                class="toggle-switch group relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent bg-zinc-200 dark:bg-zinc-700 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 cursor-pointer"
+                onclick="toggleSwitch(this)"
+              >
+                <span
+                  class="pointer-events-none relative inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 shadow ring-0 transition duration-200 ease-in-out translate-x-0"
+                ></span>
+              </button>
+              Include IPv6 (AAAA)
+            </label>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-wrap items-center gap-4">
+            <button
+              onclick="lookupHosts()"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
+            >
+              <svg
+                class="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              Lookup
+            </button>
+            <label
+              id="includeDefaultLabel"
+              class="flex items-center gap-2.5 text-sm text-zinc-400 dark:text-zinc-500 cursor-not-allowed select-none opacity-50 transition-all"
+            >
+              <button
+                type="button"
+                role="switch"
+                aria-checked="false"
+                id="includeDefault"
+                disabled
+                class="toggle-switch group relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent bg-zinc-200 dark:bg-zinc-700 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-300 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                onclick="onIncludeDefaultToggle(this)"
+              >
+                <span
+                  class="pointer-events-none relative inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 shadow ring-0 transition duration-200 ease-in-out translate-x-0"
+                ></span>
+              </button>
+              Include default nameserver
+            </label>
+          </div>
+
+          <!-- Shareable URL -->
+          <div id="shareableUrlContainer" class="hidden">
+            <div class="flex">
+              <input
+                type="text"
+                id="shareableUrl"
+                readonly
+                class="flex-1 px-3 py-1.5 rounded-l-md border border-r-0 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs font-mono text-zinc-500 dark:text-zinc-400 focus:outline-none"
+              />
+              <button
+                onclick="copyShareableUrl()"
+                id="copyUrlBtn"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-r-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"
+                  />
+                  <path
+                    d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"
+                  />
+                </svg>
+                Copy URL
+              </button>
             </div>
-            <button onclick="lookupHosts()" class="lookup-button"><i class="fas fa-search"></i> Lookup</button>
+          </div>
         </div>
-        <div class="shareable-url-container">
-            <input type="text" id="shareableUrl" readonly>
-            <button id="copyButton" onclick="copyShareableUrl()" class="copy-button"><i class="fas fa-copy"></i> Copy URL</button>
+      </div>
+
+      <!-- Results -->
+      <div id="resultsSection" class="hidden mt-6">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <h2
+              class="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide"
+            >
+              Results
+            </h2>
+            <div class="flex gap-1">
+              <button
+                onclick="expandAll()"
+                title="Expand all"
+                class="p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 dark:text-zinc-500 transition-colors"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="7 13 12 18 17 13" />
+                  <polyline points="7 6 12 11 17 6" />
+                </svg>
+              </button>
+              <button
+                onclick="collapseAll()"
+                title="Collapse all"
+                class="p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 dark:text-zinc-500 transition-colors"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="17 11 12 6 7 11" />
+                  <polyline points="17 18 12 13 7 18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button
+              onclick="copyAsJSON()"
+              id="copyJsonBtn"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+            >
+              <svg
+                class="w-3.5 h-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"
+                />
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+              </svg>
+              JSON
+            </button>
+            <button
+              onclick="copyAsText()"
+              id="copyTextBtn"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+            >
+              <svg
+                class="w-3.5 h-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              Text
+            </button>
+          </div>
         </div>
-        <h2>Results</h2>
         <div id="results"></div>
-    </div>
-</body>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="border-t border-zinc-200 dark:border-zinc-800 py-4 text-center text-xs text-zinc-400 dark:text-zinc-500"
+    >
+      <a
+        href="https://github.com/sunggun-yu/dnsq"
+        target="_blank"
+        rel="noopener"
+        class="hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+        >sunggun-yu/dnsq</a
+      >
+      <span id="footerVersion" class="font-mono"></span>
+    </footer>
+
+    <script src="/static/assets/js/script.js"></script>
+  </body>
 </html>

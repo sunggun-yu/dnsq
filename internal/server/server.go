@@ -13,6 +13,7 @@ import (
 
 type Server struct {
 	Port        int
+	Version     string
 	StaticFiles fs.FS
 }
 
@@ -27,8 +28,8 @@ func (s *StripPrefixFS) Open(name string) (fs.File, error) {
 	return s.fs.Open(path.Join(s.prefix, name))
 }
 
-// NewServer creates a new server with the given port and static files.
-func NewServer(port int, staticFiles embed.FS) *Server {
+// NewServer creates a new server with the given port, static files, and version.
+func NewServer(port int, staticFiles embed.FS, version string) *Server {
 
 	// Create a new fs.FS that strips the "static" prefix
 	strippedFS := &StripPrefixFS{
@@ -38,6 +39,7 @@ func NewServer(port int, staticFiles embed.FS) *Server {
 
 	return &Server{
 		Port:        port,
+		Version:     version,
 		StaticFiles: strippedFS,
 	}
 }
@@ -51,11 +53,11 @@ func (s *Server) Run() {
 	// Serve static files, such as index.html
 	r.StaticFS("/static", http.FS(s.StaticFiles))
 
-	// API endpoint for DNS lookup
+	// API endpoints
 	r.GET("/api/lookup", handlers.DNSLookupHandler)
+	r.GET("/api/info", handlers.InfoHandler(s.Version))
 
-	// Serve the index.html at the root. do not specify any path to serve the index.html. it will gets too many redirects if you specify the path.
-	// not sure why lol
+	// Serve the index.html at the root
 	r.NoRoute(func(c *gin.Context) {
 		c.FileFromFS("", http.FS(s.StaticFiles))
 	})
