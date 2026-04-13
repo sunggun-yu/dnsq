@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -30,9 +27,9 @@ func serverCommand() *cobra.Command {
 	// create a new cobra.Command
 	cmd := &cobra.Command{
 		Use:   "server",
-		Short: "A sub command for server",
+		Short: "Start the DNS lookup web server",
 		Run: func(cmd *cobra.Command, args []string) {
-			srv := server.NewServer(flags.port, StaticFS)
+			srv := server.NewServer(flags.port, StaticFS, rootCmd.Version)
 			srv.Run()
 		},
 	}
